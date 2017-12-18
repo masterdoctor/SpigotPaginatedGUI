@@ -2,7 +2,7 @@
 My own paginated GUI API for Spigot!
 
 ## Links
-[Releases](https://github.com/masterdoctor/SpigotPaginatedGUI/releases)
+[Releases](https://github.com/masterdoctor/SpigotPaginatedGUI/releases)  
 [Wiki](https://github.com/masterdoctor/SpigotPaginatedGUI/wiki)  
 [Spigot Post](https://www.spigotmc.org/threads/paginated-gui.277689/)
 
