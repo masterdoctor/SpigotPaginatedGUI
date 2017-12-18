@@ -49,7 +49,7 @@ public class PaginatedGUI implements InventoryHolder {
 
     @Override
     public Inventory getInventory() {
-        Inventory inventory = Bukkit.createInventory(this, (getMaxPage() > 1) ? 54 : 45, name);
+        Inventory inventory = Bukkit.createInventory(this, (getMaxPage() > 0) ? 54 : 45, name);
         // Include pagination
         GUIButton backButton = new GUIButton(ItemBuilder.start(Material.ARROW).name(PREVIOUS_PAGE).build());
         GUIButton pageIndicator = new GUIButton(ItemBuilder.start(Material.NAME_TAG)
@@ -93,7 +93,7 @@ public class PaginatedGUI implements InventoryHolder {
 
         if(currentPage > 0)
             toolbarItems.put(3, backButton);
-        if(getMaxPage() > 1)
+        if(getMaxPage() > 0)
             toolbarItems.put(4, pageIndicator);
         if(currentPage < getMaxPage())
             toolbarItems.put(5, nextButton);
@@ -145,7 +145,7 @@ public class PaginatedGUI implements InventoryHolder {
     }
 
     public int getMaxPage(){
-        return (int) Math.ceil(items.size() / 45);
+        return items.size() % 45 == 0 ? Math.round(items.size() / 45) - 1 : (int) Math.ceil(items.size() / 45);
     }
 
     public static void prepare(JavaPlugin plugin){
