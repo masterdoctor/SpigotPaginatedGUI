@@ -13,8 +13,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class PaginatedGUI implements InventoryHolder {
+
+    /* BEGIN: CONFIGURATION */
+    private static final String CHAT_PREFIX = "&c&lGUI  &c";
+    private static final String NO_PREVIOUS_PAGES = "There are no previous pages.";
+    private static final String NO_ADDITIONAL_PAGES = "There are no additional pages.";
+
+    private static final String PREVIOUS_PAGE = "&c&lPrevious Page";
+    private static final String CURRENT_PAGE = "&c&lPage {currentPage} of {maxPages}";
+    private static final String NEXT_PAGE = "&c&lNext Page";
+    /* END: CONFIGURATION */
 
     private Map<Integer, GUIButton> items;
     private Map<Integer, GUIButton> toolbarItems;
@@ -40,13 +51,26 @@ public class PaginatedGUI implements InventoryHolder {
     public Inventory getInventory() {
         Inventory inventory = Bukkit.createInventory(this, (getMaxPage() > 1) ? 54 : 45, name);
         // Include pagination
-        GUIButton backButton = new GUIButton(ItemBuilder.start(Material.ARROW).name("&c&lPrevious Page").build());
-        GUIButton pageIndicator = new GUIButton(ItemBuilder.start(Material.NAME_TAG).name("&c&lPage " + (currentPage + 1) + " of " + (getMaxPage() + 1)).build());
-        GUIButton nextButton = new GUIButton(ItemBuilder.start(Material.ARROW).name("&c&lNext Page").build());
+        GUIButton backButton = new GUIButton(ItemBuilder.start(Material.ARROW).name(PREVIOUS_PAGE).build());
+        GUIButton pageIndicator = new GUIButton(ItemBuilder.start(Material.NAME_TAG)
+                .name(
+                        CURRENT_PAGE
+                                .replaceAll(Pattern.quote("{currentPage}"), String.valueOf(currentPage + 1))
+                                .replaceAll(Pattern.quote("{maxPages}"), String.valueOf(getMaxPage() + 1))
+                )
+                .build());
+        GUIButton nextButton = new GUIButton(ItemBuilder.start(Material.ARROW).name(NEXT_PAGE).build());
 
         backButton.setListener(event -> {
+            event.setCancelled(true);
             PaginatedGUI menu = (PaginatedGUI) event.getClickedInventory().getHolder();
-            menu.previousPage();
+
+            if(!menu.previousPage()){
+                event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        CHAT_PREFIX + NO_PREVIOUS_PAGES));
+                return;
+            }
+
             event.getWhoClicked().closeInventory();
             event.getWhoClicked().openInventory(getInventory());
         });
@@ -54,8 +78,15 @@ public class PaginatedGUI implements InventoryHolder {
         pageIndicator.setListener(event -> event.setCancelled(true));
 
         nextButton.setListener(event -> {
+            event.setCancelled(true);
             PaginatedGUI menu = (PaginatedGUI) event.getClickedInventory().getHolder();
-            menu.nextPage();
+
+            if(!menu.nextPage()){
+                event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        CHAT_PREFIX + NO_ADDITIONAL_PAGES));
+                return;
+            }
+
             event.getWhoClicked().closeInventory();
             event.getWhoClicked().openInventory(getInventory());
         });
@@ -95,12 +126,22 @@ public class PaginatedGUI implements InventoryHolder {
         }
     }
 
-    public void nextPage(){
-        currentPage++;
+    public boolean nextPage(){
+        if(currentPage < getMaxPage()){
+            currentPage++;
+            return true;
+        }else{
+            return false;
+        }
     }
 
-    public void previousPage(){
-        currentPage--;
+    public boolean previousPage(){
+        if(currentPage > 0) {
+            currentPage--;
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public int getMaxPage(){
