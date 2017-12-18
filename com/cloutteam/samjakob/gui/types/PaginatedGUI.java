@@ -1,12 +1,11 @@
 package com.cloutteam.samjakob.gui.types;
 
 import com.cloutteam.samjakob.gui.ItemBuilder;
-import com.cloutteam.samjakob.gui.buttons.ButtonListener;
 import com.cloutteam.samjakob.gui.buttons.GUIButton;
 import com.cloutteam.samjakob.gui.buttons.InventoryListenerGUI;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,7 +24,7 @@ public class PaginatedGUI implements InventoryHolder {
         items = new HashMap<>();
         toolbarItems = new HashMap<>();
         currentPage = 0;
-        this.name = name;
+        this.name = ChatColor.translateAlternateColorCodes('&', name);
     }
 
     public void addButton(GUIButton button){
