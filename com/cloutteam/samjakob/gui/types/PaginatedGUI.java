@@ -3,13 +3,14 @@ package com.cloutteam.samjakob.gui.types;
 import com.cloutteam.samjakob.gui.ItemBuilder;
 import com.cloutteam.samjakob.gui.buttons.GUIButton;
 import com.cloutteam.samjakob.gui.buttons.InventoryListenerGUI;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,10 +69,14 @@ public class PaginatedGUI implements InventoryHolder {
 
         // Add all items
         int counter = 0;
-        for(int key = (currentPage * 45); key < items.keySet().size(); key++){
+        for(int key = (currentPage * 45); key <= Collections.max(items.keySet()); key++){
             if(counter >= 45)
                 break;
-            inventory.setItem(counter, items.get(key).getItem());
+
+            if(items.containsKey(key)) {
+                inventory.setItem(counter, items.get(key).getItem());
+            }
+
             counter++;
         }
 
