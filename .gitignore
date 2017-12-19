@@ -26,5 +26,4 @@
 hs_err_pid*
 
 # Maven Files
-pom.xml
 target/
