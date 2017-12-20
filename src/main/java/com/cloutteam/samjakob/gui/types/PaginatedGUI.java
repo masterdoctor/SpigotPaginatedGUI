@@ -47,8 +47,12 @@ public class PaginatedGUI implements InventoryHolder {
         items.put(slot, button);
     }
 
-    public void addToolbar(int slot, GUIButton button) {
+    public void setToolbarItem(int slot, GUIButton button) {
         toolbarItems.put(slot, button);
+    }
+    
+    public void removeToolbarItem(int slot) {
+        toolbarItems.remove(slot);
     }
 
     @Override
