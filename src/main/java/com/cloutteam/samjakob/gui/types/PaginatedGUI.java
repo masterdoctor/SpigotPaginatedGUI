@@ -47,6 +47,10 @@ public class PaginatedGUI implements InventoryHolder {
         items.put(slot, button);
     }
 
+    public void addToolbar(int slot, GUIButton button) {
+        toolbarItems.put(slot, button);
+    }
+
     @Override
     public Inventory getInventory() {
         Inventory inventory = Bukkit.createInventory(this, (getMaxPage() > 0) ? 54 : 45, name);
