@@ -38,6 +38,14 @@ public class PaginatedGUI implements InventoryHolder {
         currentPage = 0;
         this.name = ChatColor.translateAlternateColorCodes('&', name);
     }
+    
+    public void setDisplayName(String name){
+        this.name = ChatColor.translateAlternateColorCodes('&', name);
+    }
+    
+    public String getDisplayName(){
+        return name;
+    }
 
     public void addButton(GUIButton button){
         items.put(items.size(), button);
@@ -57,7 +65,8 @@ public class PaginatedGUI implements InventoryHolder {
 
     @Override
     public Inventory getInventory() {
-        Inventory inventory = Bukkit.createInventory(this, (getMaxPage() > 0) ? 54 : 45, name);
+        Inventory inventory = Bukkit.createInventory(this, (getMaxPage() > 0) ? 54 : 45, 
+                                                    );
         // Include pagination
         GUIButton backButton = new GUIButton(ItemBuilder.start(Material.ARROW).name(PREVIOUS_PAGE).build());
         GUIButton pageIndicator = new GUIButton(ItemBuilder.start(Material.NAME_TAG)
