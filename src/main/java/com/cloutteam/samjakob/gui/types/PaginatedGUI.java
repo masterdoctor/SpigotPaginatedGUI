@@ -126,6 +126,10 @@ public class PaginatedGUI implements InventoryHolder {
             }
         }
 
+        if(slot == 0 && !items.isEmpty()){
+            slot++;
+        }
+
         items.put(slot, button);
     }
 
