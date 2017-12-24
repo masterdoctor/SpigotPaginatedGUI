@@ -28,7 +28,6 @@ package com.cloutteam.samjakob.gui.types;
 import com.cloutteam.samjakob.gui.ItemBuilder;
 import com.cloutteam.samjakob.gui.buttons.GUIButton;
 import com.cloutteam.samjakob.gui.buttons.InventoryListenerGUI;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -54,6 +53,7 @@ public class PaginatedGUI implements InventoryHolder {
     private static final String NEXT_PAGE = "&c&lNext Page";
     /* END: CONFIGURATION */
 
+    private static InventoryListenerGUI inventoryListenerGUI;
     private Map<Integer, GUIButton> items;
     private Map<Integer, GUIButton> toolbarItems;
     private int currentPage;
@@ -237,8 +237,6 @@ public class PaginatedGUI implements InventoryHolder {
      * @return The highest page number that can be viewed.
      */
     public int getFinalPage(){
-        //return items.size() % 45 == 0 ? Math.round(items.size() / 45) - 1 : (int) Math.ceil(items.size() / 45);
-
         // Get the highest slot number.
         int slot = 0;
         for(int nextSlot : items.keySet()){
@@ -250,7 +248,9 @@ public class PaginatedGUI implements InventoryHolder {
         // Add one to make the math easier.
         double highestSlot = slot + 1;
 
-        return (int) Math.ceil(highestSlot / (double) 45);
+        // Divide by 45 and round up to get the page number.
+        // Then subtract one to convert it to an index.
+        return (int) Math.ceil(highestSlot / (double) 45) - 1;
     }
 
     /**
@@ -358,7 +358,10 @@ public class PaginatedGUI implements InventoryHolder {
      * @param plugin The Spigot plugin instance that you wish to register the listeners for.
      */
     public static void prepare(JavaPlugin plugin){
-        plugin.getServer().getPluginManager().registerEvents(new InventoryListenerGUI(), plugin);
+        if(inventoryListenerGUI == null){
+            inventoryListenerGUI = new InventoryListenerGUI();
+            plugin.getServer().getPluginManager().registerEvents(inventoryListenerGUI, plugin);
+        }
     }
 
 }
