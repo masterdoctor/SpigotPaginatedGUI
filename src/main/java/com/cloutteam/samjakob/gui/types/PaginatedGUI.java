@@ -168,5 +168,10 @@ public class PaginatedGUI implements InventoryHolder {
     public static void prepare(JavaPlugin plugin){
         plugin.getServer().getPluginManager().registerEvents(new InventoryListenerGUI(), plugin);
     }
+    
+    public void refreshInventory(HumanEntity holder){
+        holder.closeInventory();
+        holder.openInventory(getInventory());
+    }
 
 }
