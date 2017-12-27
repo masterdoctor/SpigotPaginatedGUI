@@ -119,6 +119,7 @@ public class PaginatedGUI implements InventoryHolder {
      * @param button The button you wish to add.
      */
     public void addButton(GUIButton button){
+        // Get the current maximum slot in the 'items' list.
         int slot = 0;
         for(int nextSlot : items.keySet()){
             if(nextSlot > slot){
@@ -126,10 +127,10 @@ public class PaginatedGUI implements InventoryHolder {
             }
         }
 
-        if(slot == 0 && !items.isEmpty()){
-            slot++;
-        }
+        // Add one to get the next maximum slot.
+        slot++;
 
+        // Put the button in that slot.
         items.put(slot, button);
     }
 
