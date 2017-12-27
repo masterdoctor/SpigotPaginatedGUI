@@ -128,7 +128,9 @@ public class PaginatedGUI implements InventoryHolder {
         }
 
         // Add one to get the next maximum slot.
-        slot++;
+        if(!items.isEmpty()) {
+            slot++;
+        }
 
         // Put the button in that slot.
         items.put(slot, button);
