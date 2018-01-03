@@ -286,7 +286,7 @@ public class PaginatedGUI implements InventoryHolder {
     public Inventory getInventory() {
         // Create an inventory (and set an appropriate size.)
         // TODO: Allow customisation of inventory size. Maybe at first, only if the inventory is not paginated.
-        Inventory inventory = Bukkit.createInventory(this, (getFinalPage() > 0) ? 54 : 45);
+        Inventory inventory = Bukkit.createInventory(this, (getFinalPage() > 0) ? 54 : 45, name);
 
         /* BEGIN PAGINATION */
         GUIButton backButton = new GUIButton(ItemBuilder.start(Material.ARROW).name(PREVIOUS_PAGE).build());
