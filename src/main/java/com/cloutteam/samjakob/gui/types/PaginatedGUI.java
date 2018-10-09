@@ -28,6 +28,7 @@ package com.cloutteam.samjakob.gui.types;
 import com.cloutteam.samjakob.gui.ItemBuilder;
 import com.cloutteam.samjakob.gui.buttons.GUIButton;
 import com.cloutteam.samjakob.gui.buttons.InventoryListenerGUI;
+import com.cloutteam.samjakob.gui.config.PaginatedInventoryConfiguration;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -43,15 +44,7 @@ import java.util.regex.Pattern;
 
 public class PaginatedGUI implements InventoryHolder {
 
-    /* BEGIN: CONFIGURATION */
-    private static final String CHAT_PREFIX = "&c&lGUI  &c";
-    private static final String NO_PREVIOUS_PAGES = "There are no previous pages.";
-    private static final String NO_ADDITIONAL_PAGES = "There are no additional pages.";
-
-    private static final String PREVIOUS_PAGE = "&c&lPrevious Page";
-    private static final String CURRENT_PAGE = "&c&lPage {currentPage} of {maxPages}";
-    private static final String NEXT_PAGE = "&c&lNext Page";
-    /* END: CONFIGURATION */
+    private PaginatedInventoryConfiguration configuration;
 
     private static InventoryListenerGUI inventoryListenerGUI;
     private Map<Integer, GUIButton> items;
@@ -62,6 +55,7 @@ public class PaginatedGUI implements InventoryHolder {
     /**
      * Creates a PaginatedGUI. This is a Spigot 'Inventory Menu' that
      * will automatically add pages to accommodate additional items.
+     * This will use the default inventory configuration.
      *
      * <br>
      *
@@ -71,10 +65,33 @@ public class PaginatedGUI implements InventoryHolder {
      * @param name The desired name of the PaginatedGUI.
      */
     public PaginatedGUI(String name){
+        this.configuration = new PaginatedInventoryConfiguration();
         items = new HashMap<>();
         toolbarItems = new HashMap<>();
         currentPage = 0;
         this.name = ChatColor.translateAlternateColorCodes('&', name);
+    }
+
+    /**
+     * Creates a PaginatedGUI. This is a Spigot 'Inventory Menu' that
+     * will automatically add pages to accommodate additional items.
+     * This will allow you to specify an inventory configuration.
+     *
+     * <br>
+     *
+     * Color Codes are supported (and should be prepended with an
+     * ampersand [&amp;]; e.g. &amp;c for red.)
+     *
+     * @param name The desired name of the PaginatedGUI.
+     * @param config The configuration for the PaginatedGUI
+     */
+    public PaginatedGUI(String name, PaginatedInventoryConfiguration config){
+        this.configuration = new PaginatedInventoryConfiguration();
+        items = new HashMap<>();
+        toolbarItems = new HashMap<>();
+        currentPage = 0;
+        this.name = ChatColor.translateAlternateColorCodes('&', name);
+        this.configuration = config;
     }
 
     /**
@@ -289,15 +306,15 @@ public class PaginatedGUI implements InventoryHolder {
         Inventory inventory = Bukkit.createInventory(this, (getFinalPage() > 0) ? 54 : 45, name);
 
         /* BEGIN PAGINATION */
-        GUIButton backButton = new GUIButton(ItemBuilder.start(Material.ARROW).name(PREVIOUS_PAGE).build());
+        GUIButton backButton = new GUIButton(ItemBuilder.start(Material.ARROW).name(configuration.getPreviousPage()).build());
         GUIButton pageIndicator = new GUIButton(ItemBuilder.start(Material.NAME_TAG)
                 .name(
-                        CURRENT_PAGE
+                        configuration.getCurrentPage()
                                 .replaceAll(Pattern.quote("{currentPage}"), String.valueOf(currentPage + 1))
                                 .replaceAll(Pattern.quote("{maxPages}"), String.valueOf(getFinalPage() + 1))
                 )
                 .build());
-        GUIButton nextButton = new GUIButton(ItemBuilder.start(Material.ARROW).name(NEXT_PAGE).build());
+        GUIButton nextButton = new GUIButton(ItemBuilder.start(Material.ARROW).name(configuration.getNextPage()).build());
 
         backButton.setListener(event -> {
             event.setCancelled(true);
@@ -305,7 +322,7 @@ public class PaginatedGUI implements InventoryHolder {
 
             if(!menu.previousPage()){
                 event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        CHAT_PREFIX + NO_PREVIOUS_PAGES));
+                        configuration.getChatPrefix() + configuration.getNoPreviousPages()));
                 return;
             }
 
@@ -320,7 +337,7 @@ public class PaginatedGUI implements InventoryHolder {
 
             if(!menu.nextPage()){
                 event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        CHAT_PREFIX + NO_ADDITIONAL_PAGES));
+                        configuration.getChatPrefix() + configuration.getNoAdditionalPages()));
                 return;
             }
 
@@ -356,6 +373,16 @@ public class PaginatedGUI implements InventoryHolder {
         }
 
         return inventory;
+    }
+
+    /**
+     * Returns the inventory configuration.
+     * This is the best way to customise strings in the inventory.
+     *
+     * @return The inventory configuration as a {@link PaginatedInventoryConfiguration} object.
+     */
+    public PaginatedInventoryConfiguration getConfiguration(){
+        return configuration;
     }
 
     /**
