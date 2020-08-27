@@ -1,15 +1,19 @@
-# SpigotPaginatedGUI
+# DEPRECATED
+This API has been deprecated in favor of my rewrite, [SpiGUI](https://github.com/SamJakob/SpiGUI), which contains fundamental improvements and more features.
+
+
+## SpigotPaginatedGUI
 My own paginated GUI API for Spigot!
 
-## Quick Start Guide
+### Quick Start Guide
 See the Quick Start Guide and more in [the wiki.](https://github.com/masterdoctor/SpigotPaginatedGUI/wiki)
 
-## Links
+### Links
 [Releases](https://github.com/masterdoctor/SpigotPaginatedGUI/releases)  
 [Wiki](https://github.com/masterdoctor/SpigotPaginatedGUI/wiki)  
 [Spigot Post](https://www.spigotmc.org/threads/paginated-gui.277689/)
 
-## Todo List
+### Todo List
 * Seriously, seriously, seriously put v1.3.2 on Maven!!!
 * Remove button listener altogether and make it a consumer interface
 * Builder pattern for creating a menu
